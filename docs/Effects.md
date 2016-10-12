@@ -26,6 +26,8 @@ make side effects a noop in event replays.
     + [:dispatch-later](#-dispatch-later)
     + [:dispatch](#-dispatch)
     + [:dispatch-n](#-dispatch-n)
+    + [:dispatch-debounce](#-dispatch-debounce)
+    + [:dispatch-throttle](#-dispatch-throttle)
     + [:deregister-event-handler](#-deregister-event-handler)
     + [:db](#-db)
 
@@ -322,6 +324,47 @@ usage:
 ```clj
 {:dispatch-n (list [:do :all] [:three :of] [:these])}
 ```
+
+#### :dispatch-debounce
+
+[Debounces](https://css-tricks.com/the-difference-between-throttling-and-debouncing/#article-header-id-1) dispatch events. 
+Will only dispatch the event after `wait` milliseconds have passed, and no more dispatches for this `:id` have been seen.
+Repeated dispatches will reset the timer. Use this in scenarios where you want to wait for quiescence
+before dispatching. Dispatches are provided with an `:id` to reschedule if another debounce
+event comes through. If you only need to delay a dispatch then use `:dispatch-later`.
+
+usage:
+
+```cljs
+{:dispatch-debounce [{:id ::re-render-markdown
+                      :wait 250
+                      :dispatch [:re-render :main-section]}]}
+```
+
+Cancel a debounce event. No error will be thrown if the debounced event has already been run (or was never run).
+
+```cljs
+{:dispatch-debounce [{:id     ::re-render-markdown
+                      :cancel true}]}
+```
+
+#### :dispatch-throttle
+
+[Throttles](https://css-tricks.com/the-difference-between-throttling-and-debouncing/#article-header-id-0) dispatch events to one event every `window-duration`
+and drops other events. Use this in scenarios where you want to throttle expensive calls, but not wait until quiescence before running the calls, 
+e.g. typeahead search calling out to a remote system. If `:trailing?` is true, then the last event received will be dispatched at
+the end of the `window-duration`, if more than one event was received in the window.
+
+Usage:
+
+```cljs
+{:dispatch-throttle [{:id ::typeahead-search
+                      :window-duration 250
+                      :run-last? true}]}
+```
+
+TODO: Talk about what happens when window-duration changes
+TODO: Does it make sense to have a cancel?
 
 #### :deregister-event-handler
 

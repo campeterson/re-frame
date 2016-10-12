@@ -3,7 +3,8 @@
 
 #### Improvements
 
-  - [#200](https://github.com/Day8/re-frame/pull/200) Remove trailing spaces from console logging 
+  - [#200](https://github.com/Day8/re-frame/pull/200) Remove trailing spaces from console logging
+  - Add `:dispatch-debounce` and `:dispatch-throttle`. Don't use `:dispatch-debounce` on a trampoline without a supervising adult.
 
 ## 0.8.0  (2016.08.19)
 
@@ -102,7 +103,7 @@ Joking aside, this is a substantial release which will change how you use re-fra
     Interceptors also dovetail really nicely with the effects and coeffects 
     story which has emerged in re-frame through this 0.8.0 release. 
     
-    Docs:  https://github.com/Day8/re-frame/tree/develop/docs
+    Docs:  https://github.com/Day8/re-frame/tree/develop/docs    
     
   - we now have a logo designed by Sketch Maester @martinklepsch. Thank you Martin!  But remember, no 
     good deed ever goes unpunished - we'll be pestering you every time from now on :-)

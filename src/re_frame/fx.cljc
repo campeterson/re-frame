@@ -120,3 +120,76 @@
   (fn [value]
     (reset! app-db value)))
 
+;(defonce timeouts
+;         (atom {}))
+;
+;(register
+;  :dispatch-debounce
+;  (fn [[id event-vec n]]
+;    (js/clearTimeout (@timeouts id))
+;    (swap! timeouts assoc id
+;           (js/setTimeout (fn []
+;                            (router/dispatch event-vec)
+;                            (swap! timeouts dissoc id))
+;                          n))))
+;
+;(register
+;  :stop-debounce
+;  (fn [id]
+;    (js/clearTimeout (@timeouts id))
+;    (swap! timeouts dissoc id)))
+;
+;(def-event-fx
+;  :search-field-updated
+;  (fn [_ [_ current-search-string]]
+;    {:dispatch-debounce [::search [:do-search current-search-string] 250]}))
+;
+;(def-event-fx
+;  :cancel-search
+;  (fn [_ _]
+;    {:stop-debounce ::search}))
+;
+;(defn make-debouncer-handler
+;  "returns an effect handler"
+;  []
+;  (let [id->interval-id (atom {})
+;        cancel          (fn [id]
+;                          (when-let [interval-id (get @id->interval-id id)]
+;                            (js/clearTimeout interval-id)
+;                            (swap! id->interval-id dissoc id)))
+;        schedule        (fn [id event delay]
+;                          (let [do-dispatch #(do
+;                                              (swap! id->interval-id dissoc id)
+;                                              (router/dispatch event))
+;                                interval-id (js/setTimeout do-dispatch delay)]
+;                            (cancel id)
+;                            (swap! id->interval-id assoc id interval-id)))
+;        process-entry   (fn [{:keys [cancel id dispatch delay]}]
+;                          (if cancel
+;                            (cancel id)
+;                            (schedule id dispatch delay)))]
+;    (fn debouncer-effect-handler
+;      [value]
+;      (doseq [m (if (sequential? value) value [value])]
+;        (process-entry m)))))
+;
+;(register
+;  :dispatch-debounce
+;  (make-debouncer-handler))
+;
+;(def timeouts (atom {}))
+
+;;;;;;;;;;;;
+
+(register
+  :dispatch-debounce
+  (fn [dispatches]
+    (doseq [{:keys [id cancel dispatch timeout]} dispatches]
+      )))
+
+
+(register
+  :dispatch-throttle
+  (fn [dispatches]
+    (doseq [{:keys [id window-duration run-last?]} dispatches]
+      )))
